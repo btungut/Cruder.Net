@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{796FCC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{581C3E40-4777-4313-8B52-EF9AC86DEBDD}"
 	ProjectSection(SolutionItems) = preProject
+		0.9.0.0-Cruder-Views-Contents.rar = 0.9.0.0-Cruder-Views-Contents.rar
 		LICENSE = LICENSE
 	EndProjectSection
 EndProject
