@@ -366,8 +366,7 @@ namespace Cruder.Web.Mvc.Controllers
         protected async virtual Task OnSaveExecutedAsync(T entity, TDetailViewModel viewModel, ActionParameters parameters) { }
         protected async virtual Task OnSaveExecutingAsync(T entity, TDetailViewModel viewModel, ActionParameters parameters) { }
 
-        protected async virtual Task OnCruderViewsExecutingAsync(){}
-
-        protected virtual void OnCruderViewsExecuting(){}
+        protected async virtual Task OnCruderViewsExecutingAsync() { }
+        protected virtual void OnCruderViewsExecuting() { }
     }
 }

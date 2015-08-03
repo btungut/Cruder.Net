@@ -8,6 +8,7 @@ using System.Text;
 using System.Web.Mvc;
 using System;
 using System.Web;
+using System.Linq;
 
 namespace Cruder.Helper
 {
@@ -96,7 +97,9 @@ namespace Cruder.Helper
 
             string validationClass = cruderHtmlHelper.GenerateValidationEngineClass((expression.Body as MemberExpression).Member);
 
-            if (htmlAttributes["class"] != null)
+            if (htmlAttributes == null) htmlAttributes = new Dictionary<string, object>();
+
+            if (htmlAttributes.Any(q => q.Key == "class"))
             {
                 htmlAttributes["class"] = htmlAttributes["class"].ToString() + " " + validationClass;
             }

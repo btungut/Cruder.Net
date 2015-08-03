@@ -10,9 +10,9 @@ namespace Cruder.Web.Security
 {
     public class CruderPrincipal : IPrincipal
     {
-        public string AuthenticationType { get; private set; }
+        public string AuthenticationType { get; internal set; }
 
-        public UserModel User { get; private set; }
+        public UserModel User { get; internal set; }
 
         public CruderPrincipal(string authenticationType, UserModel user)
         {

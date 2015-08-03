@@ -33,7 +33,10 @@ namespace Cruder.Web.Auth
 
                         if (userInstance != null)
                         {
-                            BindUser(userInstance);
+                            UserModel model = MapUserEntityToModel(userInstance);
+                            CruderPrincipal.Current.User = model;
+                            RenewPrincipalIdentity();
+
                             retVal = true;
                         }
                         else
@@ -65,7 +68,10 @@ namespace Cruder.Web.Auth
 
                     if (userInstance != null)
                     {
-                        BindUser(userInstance);
+                        UserModel model = MapUserEntityToModel(userInstance);
+                        CruderPrincipal.Current.User = model;
+                        RenewPrincipalIdentity();
+
                         retVal = true;
                     }
                 }
@@ -92,11 +98,13 @@ namespace Cruder.Web.Auth
             return isAllowedAnonymous;
         }
 
-        private static void BindUser(UserEntity userInstance)
+        private static UserModel MapUserEntityToModel(UserEntity userInstance)
         {
+            UserModel model = null;
+
             if (userInstance != null)
             {
-                UserModel userModel = new UserModel
+                model = new UserModel
                 {
                     Id = userInstance.Id,
                     Fullname = userInstance.Fullname,
@@ -119,9 +127,9 @@ namespace Cruder.Web.Auth
                         }).ToList()
                     }
                 };
-
-                UserSessionManager.Bind(userModel);
             }
+
+            return model;
         }
     }
 }

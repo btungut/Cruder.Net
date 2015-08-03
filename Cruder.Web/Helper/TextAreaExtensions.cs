@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Web.Mvc;
 using System.Web;
+using System.Linq;
 
 namespace Cruder.Helper
 {
@@ -117,13 +118,14 @@ namespace Cruder.Helper
 
             string validationClass = cruderHtmlHelper.GenerateValidationEngineClass((expression.Body as MemberExpression).Member);
 
-            if (htmlAttributes != null && htmlAttributes["class"] != null)
+            if (htmlAttributes == null) htmlAttributes = new Dictionary<string, object>();
+
+            if (htmlAttributes.Any(q => q.Key == "class"))
             {
                 htmlAttributes["class"] = htmlAttributes["class"].ToString() + " " + validationClass;
             }
             else
             {
-                if (htmlAttributes == null) htmlAttributes = new Dictionary<string, object>();
                 htmlAttributes.Add("class", validationClass);
             }
 
@@ -150,13 +152,14 @@ namespace Cruder.Helper
 
             string validationClass = cruderHtmlHelper.GenerateValidationEngineClass((expression.Body as MemberExpression).Member);
 
-            if (htmlAttributes != null && htmlAttributes["class"] != null)
+            if (htmlAttributes == null) htmlAttributes = new Dictionary<string, object>();
+
+            if (htmlAttributes.Any(q=>q.Key == "class"))
             {
                 htmlAttributes["class"] = htmlAttributes["class"].ToString() + " " + validationClass;
             }
             else
             {
-                if (htmlAttributes == null) htmlAttributes = new Dictionary<string, object>();
                 htmlAttributes.Add("class", validationClass);
             }
 

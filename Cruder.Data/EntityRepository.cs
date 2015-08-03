@@ -303,11 +303,16 @@ namespace Cruder.Data
 
         private void BindTrackableProperties(T entity, ActionType type)
         {
-            var identity = (Thread.CurrentPrincipal.Identity as Cruder.Core.Security.CruderIdentity);
-
             if (!(Thread.CurrentPrincipal.Identity is Cruder.Core.Security.CruderIdentity))
             {
                 throw new FrameworkException("EntityRepository<>.BindTrackableProperties()", "Identity in CurrentPrincipal must be typeof(CruderIdentity) to use EntityRepository functionalities.");
+            }
+
+            var identity = (Thread.CurrentPrincipal.Identity as Cruder.Core.Security.CruderIdentity);
+
+            if (!identity.IsAuthenticated || !identity.UserId.HasValue)
+            {
+                throw new FrameworkException("EntityRepository<>.BindTrackableProperties()", "Identity must be authenticated to use EntityRepository functionalities.");
             }
 
             if (type == ActionType.Create && entity is ICreationTrackable)

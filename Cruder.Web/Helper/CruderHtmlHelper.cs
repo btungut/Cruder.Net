@@ -72,7 +72,7 @@ namespace Cruder.Helper
             {
                 validationAttributes.Add((withClassAttribute as ValidationEngineAttribute).ValidationClass);
             }
-            else if (customAttributes.Count() > 0)
+            else if (customAttributes.Any())
             {
                 foreach (object attribute in customAttributes)
                 {
