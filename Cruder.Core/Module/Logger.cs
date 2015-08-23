@@ -84,7 +84,14 @@ namespace Cruder.Core.Module
 
             if (ConfigurationFactory.Logger.LoggingLevel != LoggingLevel.NoLog)
             {
-                string connString = System.Configuration.ConfigurationManager.ConnectionStrings[ConfigurationFactory.Logger.ConnectionStringKey].ConnectionString;
+                var connectionSection = System.Configuration.ConfigurationManager.ConnectionStrings[ConfigurationFactory.Logger.ConnectionStringKey];
+
+                if (connectionSection ==null)
+                {
+                    throw new FrameworkException("Logger.MssqlLog()", "Unable to find logging connection string. Update configuration sections.");
+                }
+
+                string connString = connectionSection.ConnectionString;
                 SqlConnection conn = new SqlConnection(connString);
                 SqlCommand cmd = new SqlCommand();
 
