@@ -4,26 +4,27 @@ using Cruder.Web.ViewModel;
 
 namespace Cruder.Web.Mvc.Controllers
 {
-    public abstract class CruderWebController<T> : CruderWebController<T, ListViewModel<T>, DetailViewModel<T>> where T : IEntity
+    public abstract class CruderWebController<TEntity> : CruderWebController<TEntity, ListViewModel<TEntity>, DetailViewModel<TEntity>> 
+        where TEntity : IEntity
     {
         public CruderWebController()
-            : this(IoC.Resolve<ICruderRepository<T>>())
+            : this(IoC.Resolve<ICruderRepository<TEntity>>())
         {
         }
 
-        public CruderWebController(ICruderRepository<T> repository)
+        public CruderWebController(ICruderRepository<TEntity> repository)
             : base(repository)
         {
         }
 
-        protected override ListViewModel<T> GetListViewModelInstance()
+        protected override ListViewModel<TEntity> GetListViewModelInstance()
         {
-            return new ListViewModel<T>();
+            return new ListViewModel<TEntity>();
         }
 
-        protected override DetailViewModel<T> GetDetailViewModelInstance()
+        protected override DetailViewModel<TEntity> GetDetailViewModelInstance()
         {
-            return new DetailViewModel<T>();
+            return new DetailViewModel<TEntity>();
         }
     }
 }

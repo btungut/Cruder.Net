@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace Cruder.Data
 {
-    public abstract class EntityRepository<T> : BaseRepository<T>, ICruderRepository<T>, IDisposable
-        where T : class, IEntity
+    public abstract class EntityRepository<TEntity, TKey> : BaseRepository<TEntity, TKey>, ICruderRepository<TEntity>, IDisposable
+        where TEntity : class, IEntity<TKey>
     {
         protected DbContext DbContext { get; private set; }
-        protected DbSet<T> Tracking { get; private set; }
+        protected DbSet<TEntity> Tracking { get; private set; }
 
         public EntityRepository()
             : this(IoC.Resolve<DbContext>())
@@ -27,10 +27,10 @@ namespace Cruder.Data
         public EntityRepository(DbContext dbContext)
         {
             this.DbContext = dbContext;
-            this.Tracking = DbContext.Set<T>();
+            this.Tracking = DbContext.Set<TEntity>();
         }
 
-        public override IQueryable<T> Queryable
+        public override IQueryable<TEntity> Queryable
         {
             get { return Tracking; }
         }
@@ -39,11 +39,11 @@ namespace Cruder.Data
         {
             if (id == null) throw new ArgumentNullException("id");
 
-            T entity = Tracking.Find(id);
+            TEntity entity = Tracking.Find(id);
             return this.Delete(entity);
         }
 
-        public Result<int> Delete(T entity)
+        public Result<int> Delete(TEntity entity)
         {
             if (entity == null) throw new ArgumentNullException("entity");
 
@@ -56,12 +56,12 @@ namespace Cruder.Data
 
             if (!parameters.OperationResult.HasError)
             {
-                DbEntityEntry<T> entry = null;
+                DbEntityEntry<TEntity> entry = null;
                 EntityState originalState = EntityState.Detached;
 
                 try
                 {
-                    entry = DbContext.Entry<T>(entity);
+                    entry = DbContext.Entry<TEntity>(entity);
                     originalState = entry.State;
                     entry.State = EntityState.Deleted;
 
@@ -91,11 +91,11 @@ namespace Cruder.Data
         {
             if (id == null) throw new ArgumentNullException("id");
 
-            T entity = await Tracking.FindAsync(id);
+            TEntity entity = await Tracking.FindAsync(id);
             return await this.DeleteAsync(entity);
         }
 
-        public async Task<Result<int>> DeleteAsync(T entity)
+        public async Task<Result<int>> DeleteAsync(TEntity entity)
         {
             if (entity == null) throw new ArgumentNullException("entity");
 
@@ -107,14 +107,14 @@ namespace Cruder.Data
             OnDeleteExecuting(entity, parameters);
             await OnDeleteExecutingAsync(entity, parameters);
 
-            DbEntityEntry<T> entry = null;
+            DbEntityEntry<TEntity> entry = null;
             EntityState originalState = EntityState.Detached;
 
             if (!parameters.OperationResult.HasError)
             {
                 try
                 {
-                    entry = DbContext.Entry<T>(entity);
+                    entry = DbContext.Entry<TEntity>(entity);
                     originalState = entry.State;
                     entry.State = EntityState.Deleted;
 
@@ -160,14 +160,14 @@ namespace Cruder.Data
             return retVal;
         }
 
-        public Result<int> Save(T entity)
+        public Result<int> Save(TEntity entity)
         {
             if (entity == null) throw new ArgumentNullException("entity");
 
             return this.Save(entity, ActionType.Create);
         }
 
-        public Result<int> Save(T entity, ActionType actionType)
+        public Result<int> Save(TEntity entity, ActionType actionType)
         {
             if (entity == null) throw new ArgumentNullException("entity");
 
@@ -180,12 +180,12 @@ namespace Cruder.Data
 
             if (!parameters.OperationResult.HasError)
             {
-                DbEntityEntry<T> entry = null;
+                DbEntityEntry<TEntity> entry = null;
                 EntityState originalState = EntityState.Unchanged;
 
                 try
                 {
-                    entry = DbContext.Entry<T>(entity);
+                    entry = DbContext.Entry<TEntity>(entity);
                     originalState = entry.State;
 
                     if (actionType == ActionType.Create)
@@ -239,14 +239,14 @@ namespace Cruder.Data
             return retVal;
         }
 
-        public async Task<Result<int>> SaveAsync(T entity)
+        public async Task<Result<int>> SaveAsync(TEntity entity)
         {
             if (entity == null) throw new ArgumentNullException("entity");
 
             return await this.SaveAsync(entity, ActionType.Create);
         }
 
-        public async Task<Result<int>> SaveAsync(T entity, ActionType actionType)
+        public async Task<Result<int>> SaveAsync(TEntity entity, ActionType actionType)
         {
             if (entity == null) throw new ArgumentNullException("entity");
 
@@ -258,14 +258,14 @@ namespace Cruder.Data
             OnSaveExecuting(entity, actionType, parameters);
             await OnSaveExecutingAsync(entity, actionType, parameters);
 
-            DbEntityEntry<T> entry = null;
+            DbEntityEntry<TEntity> entry = null;
             EntityState originalState = EntityState.Unchanged;
 
             if (!parameters.OperationResult.HasError)
             {
                 try
                 {
-                    entry = DbContext.Entry<T>(entity);
+                    entry = DbContext.Entry<TEntity>(entity);
                     originalState = entry.State;
 
                     if (actionType == ActionType.Create)
@@ -301,7 +301,7 @@ namespace Cruder.Data
             return parameters.OperationResult;
         }
 
-        private void BindTrackableProperties(T entity, ActionType type)
+        private void BindTrackableProperties(TEntity entity, ActionType type)
         {
             if (!(Thread.CurrentPrincipal.Identity is Cruder.Core.Security.CruderIdentity))
             {
@@ -332,35 +332,35 @@ namespace Cruder.Data
             }
         }
 
-        public virtual IQueryable<T> Query()
+        public virtual IQueryable<TEntity> Query()
         {
             return this.Query(null);
         }
 
-        public virtual IQueryable<T> Query(Expression<Func<T, bool>> predicate)
+        public virtual IQueryable<TEntity> Query(Expression<Func<TEntity, bool>> predicate)
         {
             return this.Query(predicate, null);
         }
 
-        public virtual IQueryable<T> Query(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IOrderedQueryable<T>> orderby)
+        public virtual IQueryable<TEntity> Query(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby)
         {
             return this.Query(predicate, orderby, null);
         }
 
-        public virtual IQueryable<T> Query(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IOrderedQueryable<T>> orderby, QueryOptions options)
+        public virtual IQueryable<TEntity> Query(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, QueryOptions options)
         {
             return base.Query(predicate, orderby, options);
         }
 
-        protected virtual void OnSaveExecuting(T entity, ActionType actionType, ActionParameters parameters) { }
-        protected virtual void OnSaveExecuted(T entity, ActionType actionType, ActionParameters parameters) { }
-        protected virtual async Task OnSaveExecutingAsync(T entity, ActionType actionType, ActionParameters parameters) { }
-        protected virtual async Task OnSaveExecutedAsync(T entity, ActionType actionType, ActionParameters parameters) { }
+        protected virtual void OnSaveExecuting(TEntity entity, ActionType actionType, ActionParameters parameters) { }
+        protected virtual void OnSaveExecuted(TEntity entity, ActionType actionType, ActionParameters parameters) { }
+        protected virtual async Task OnSaveExecutingAsync(TEntity entity, ActionType actionType, ActionParameters parameters) { }
+        protected virtual async Task OnSaveExecutedAsync(TEntity entity, ActionType actionType, ActionParameters parameters) { }
 
-        protected virtual void OnDeleteExecuting(T entity, ActionParameters parameters) { }
-        protected virtual void OnDeleteExecuted(T entity, ActionParameters parameters) { }
-        protected virtual async Task OnDeleteExecutingAsync(T entity, ActionParameters parameters) { }
-        protected virtual async Task OnDeleteExecutedAsync(T entity, ActionParameters parameters) { }
+        protected virtual void OnDeleteExecuting(TEntity entity, ActionParameters parameters) { }
+        protected virtual void OnDeleteExecuted(TEntity entity, ActionParameters parameters) { }
+        protected virtual async Task OnDeleteExecutingAsync(TEntity entity, ActionParameters parameters) { }
+        protected virtual async Task OnDeleteExecutedAsync(TEntity entity, ActionParameters parameters) { }
 
         public virtual void Dispose()
         {

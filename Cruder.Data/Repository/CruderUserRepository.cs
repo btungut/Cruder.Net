@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Cruder.Data.Repository
 {
-    public class CruderUserRepository : BaseCruderRepository<Cruder.Data.Model.UserEntity>
+    public class CruderUserRepository : BaseCruderRepository<Model.UserEntity,int>
     {
         public override Func<IQueryable<Model.UserEntity>, IOrderedQueryable<Model.UserEntity>> DefaultSorter
         {

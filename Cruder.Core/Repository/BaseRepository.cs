@@ -5,31 +5,32 @@ using System.Linq.Expressions;
 
 namespace Cruder.Core.Repository
 {
-    public abstract class BaseRepository<T> where T : class
+    public abstract class BaseRepository<TEntity, TKey> 
+        where TEntity : Contract.IEntity<TKey>
     {
-        public abstract IQueryable<T> Queryable { get; }
+        public abstract IQueryable<TEntity> Queryable { get; }
 
-        public virtual Expression<Func<T, bool>> DefaultFilter { get; private set; }
+        public virtual Expression<Func<TEntity, bool>> DefaultFilter { get; private set; }
 
-        public virtual Func<IQueryable<T>, IOrderedQueryable<T>> DefaultSorter { get; private set; }
+        public virtual Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> DefaultSorter { get; private set; }
 
         public BaseRepository()
         {
             this.DefaultFilter = null;
-            this.DefaultSorter = null;
+            this.DefaultSorter = q => q.OrderBy(x => x.Id);
         }
 
         public Type EntityType
         {
             get
             {
-                return typeof(T);
+                return typeof(TEntity);
             }
         }
 
-        public virtual IQueryable<T> Query(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, QueryOptions options)
+        public virtual IQueryable<TEntity> Query(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, QueryOptions options)
         {
-            IQueryable<T> retVal = this.Queryable;
+            IQueryable<TEntity> retVal = this.Queryable;
             bool isOrdered = false;
 
             try

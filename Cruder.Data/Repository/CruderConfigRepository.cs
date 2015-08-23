@@ -1,12 +1,11 @@
-﻿using Cruder.Data.Model;
-using System;
+﻿using System;
 using System.Linq;
 
 namespace Cruder.Data.Repository
 {
-    public class CruderConfigRepository : BaseCruderRepository<ConfigEntity>
+    public class CruderConfigRepository : BaseCruderRepository<Model.ConfigEntity, int>
     {
-        public override Func<IQueryable<ConfigEntity>, IOrderedQueryable<ConfigEntity>> DefaultSorter
+        public override Func<IQueryable<Model.ConfigEntity>, IOrderedQueryable<Model.ConfigEntity>> DefaultSorter
         {
             get
             {
@@ -14,7 +13,7 @@ namespace Cruder.Data.Repository
             }
         }
 
-        protected override void OnSaveExecuting(ConfigEntity entity, Core.ActionType actionType, ActionParameters parameters)
+        protected override void OnSaveExecuting(Model.ConfigEntity entity, Core.ActionType actionType, ActionParameters parameters)
         {
             if (Queryable.Any(q => q.Key == entity.Key && q.Id != entity.Id))
             {

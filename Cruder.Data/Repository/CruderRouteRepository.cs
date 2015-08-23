@@ -2,9 +2,9 @@
 
 namespace Cruder.Data.Repository
 {
-    public class CruderRouteRepository : BaseCruderRepository<Cruder.Data.Model.RouteEntity>
+    public class CruderRouteRepository : BaseCruderRepository<Model.RouteEntity, int>
     {
-        public override System.Func<System.Linq.IQueryable<Cruder.Data.Model.RouteEntity>, System.Linq.IOrderedQueryable<Cruder.Data.Model.RouteEntity>> DefaultSorter
+        public override System.Func<System.Linq.IQueryable<Model.RouteEntity>, System.Linq.IOrderedQueryable<Model.RouteEntity>> DefaultSorter
         {
             get
             {

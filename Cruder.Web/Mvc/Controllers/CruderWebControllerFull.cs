@@ -20,26 +20,26 @@ using System.Data.Entity.Validation;
 
 namespace Cruder.Web.Mvc.Controllers
 {
-    public abstract class CruderWebController<T, TListViewModel, TDetailViewModel> : RepositoryController<T>
-        where T : IEntity
-        where TListViewModel : ListViewModel<T>
-        where TDetailViewModel : DetailViewModel<T>
+    public abstract class CruderWebController<TEntity, TListViewModel, TDetailViewModel> : RepositoryController<TEntity>
+        where TEntity : IEntity
+        where TListViewModel : ListViewModel<TEntity>
+        where TDetailViewModel : DetailViewModel<TEntity>
     {
-        private readonly ICruderRepository<T> repository = null;
+        private readonly ICruderRepository<TEntity> repository = null;
 
         public bool IsValidationEnabled { get; protected set; }
 
-        protected override ICruderRepository<T> Repository
+        protected override ICruderRepository<TEntity> Repository
         {
             get { return this.repository; }
         }
 
         public CruderWebController()
-            : this(IoC.Resolve<ICruderRepository<T>>())
+            : this(IoC.Resolve<ICruderRepository<TEntity>>())
         {
         }
 
-        public CruderWebController(ICruderRepository<T> repository)
+        public CruderWebController(ICruderRepository<TEntity> repository)
         {
             this.repository = repository;
             this.IsValidationEnabled = true;
@@ -77,7 +77,7 @@ namespace Cruder.Web.Mvc.Controllers
             OnDetailViewModelPreparing(detailViewModel);
             await OnDetailViewModelPreparingAsync(detailViewModel);
 
-            T entity = await GetCurrentEntityAsync();
+            TEntity entity = await GetCurrentEntityAsync();
 
             if (entity == null)
             {
@@ -104,7 +104,7 @@ namespace Cruder.Web.Mvc.Controllers
                 OperationResult = new Result<int>()
             };
 
-            T entity = await GetCurrentEntityAsync();
+            TEntity entity = await GetCurrentEntityAsync();
 
             OnDeleteExecuting(entity, parameters);
             await OnDeleteExecutingAsync(entity, parameters);
@@ -137,7 +137,7 @@ namespace Cruder.Web.Mvc.Controllers
                 OperationResult = new Result<int>()
             };
 
-            T entity = await GetCurrentEntityAsync();
+            TEntity entity = await GetCurrentEntityAsync();
 
             if (CheckValidationStatus())
             {
@@ -244,14 +244,14 @@ namespace Cruder.Web.Mvc.Controllers
             }
         }
 
-        private T currentEntity;
-        protected async Task<T> GetCurrentEntityAsync()
+        private TEntity currentEntity;
+        protected async Task<TEntity> GetCurrentEntityAsync()
         {
             if (currentEntity == null)
             {
                 if (CurrentActionType == Cruder.Core.ActionType.Create)
                 {
-                    currentEntity = Activator.CreateInstance<T>();
+                    currentEntity = Activator.CreateInstance<TEntity>();
                 }
                 else if (
                     CurrentActionType == Cruder.Core.ActionType.Delete ||
@@ -273,8 +273,8 @@ namespace Cruder.Web.Mvc.Controllers
             return currentEntity;
         }
 
-        private List<T> currentEntities;
-        protected async Task<List<T>> GetCurrentEntitiesAsync()
+        private List<TEntity> currentEntities;
+        protected async Task<List<TEntity>> GetCurrentEntitiesAsync()
         {
             if (currentEntities == null)
             {
@@ -294,7 +294,7 @@ namespace Cruder.Web.Mvc.Controllers
             return currentEntities;
         }
 
-        private Result<int> PrepareEntity(T target)
+        private Result<int> PrepareEntity(TEntity target)
         {
             Result<int> retVal = new Result<int>();
 
@@ -356,15 +356,15 @@ namespace Cruder.Web.Mvc.Controllers
         protected async virtual Task OnDetailViewModelPreparingAsync(TDetailViewModel detailViewModel) { }
         protected async virtual Task OnDetailViewModelPreparedAsync(TDetailViewModel detailViewModel) { }
 
-        protected virtual void OnDeleteExecuted(T entity, ActionParameters parameters) { }
-        protected virtual void OnDeleteExecuting(T entity, ActionParameters parameters) { }
-        protected async virtual Task OnDeleteExecutedAsync(T entity, ActionParameters parameters) { }
-        protected async virtual Task OnDeleteExecutingAsync(T entity, ActionParameters parameters) { }
+        protected virtual void OnDeleteExecuted(TEntity entity, ActionParameters parameters) { }
+        protected virtual void OnDeleteExecuting(TEntity entity, ActionParameters parameters) { }
+        protected async virtual Task OnDeleteExecutedAsync(TEntity entity, ActionParameters parameters) { }
+        protected async virtual Task OnDeleteExecutingAsync(TEntity entity, ActionParameters parameters) { }
 
-        protected virtual void OnSaveExecuted(T entity, TDetailViewModel viewModel, ActionParameters parameters) { }
-        protected virtual void OnSaveExecuting(T entity, TDetailViewModel viewModel, ActionParameters parameters) { }
-        protected async virtual Task OnSaveExecutedAsync(T entity, TDetailViewModel viewModel, ActionParameters parameters) { }
-        protected async virtual Task OnSaveExecutingAsync(T entity, TDetailViewModel viewModel, ActionParameters parameters) { }
+        protected virtual void OnSaveExecuted(TEntity entity, TDetailViewModel viewModel, ActionParameters parameters) { }
+        protected virtual void OnSaveExecuting(TEntity entity, TDetailViewModel viewModel, ActionParameters parameters) { }
+        protected async virtual Task OnSaveExecutedAsync(TEntity entity, TDetailViewModel viewModel, ActionParameters parameters) { }
+        protected async virtual Task OnSaveExecutingAsync(TEntity entity, TDetailViewModel viewModel, ActionParameters parameters) { }
 
         protected async virtual Task OnCruderViewsExecutingAsync() { }
         protected virtual void OnCruderViewsExecuting() { }

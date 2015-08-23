@@ -2,8 +2,8 @@
 
 namespace Cruder.Data.Repository
 {
-    public abstract class BaseCruderRepository<T> : EntityRepository<T> where
-        T:class, IEntity
+    public abstract class BaseCruderRepository<TEntity, TKey> : EntityRepository<TEntity, TKey> where
+        TEntity : class, IEntity<TKey>
     {
         public BaseCruderRepository()
             : base(new CruderDbContext())

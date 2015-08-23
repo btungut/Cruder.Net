@@ -6,25 +6,25 @@ using System.Threading.Tasks;
 
 namespace Cruder.Core.Contract
 {
-    public interface ICruderRepository<T> : IDisposable
+    public interface ICruderRepository<TEntity> : IDisposable
     {
         Result<int> Delete(object id);
-        Result<int> Delete(T entity);
+        Result<int> Delete(TEntity entity);
 
         Result<int> Save();
-        Result<int> Save(T entity);
-        Result<int> Save(T entity, ActionType actionType);
+        Result<int> Save(TEntity entity);
+        Result<int> Save(TEntity entity, ActionType actionType);
 
         Task<Result<int>> DeleteAsync(object id);
-        Task<Result<int>> DeleteAsync(T entity);
+        Task<Result<int>> DeleteAsync(TEntity entity);
 
         Task<Result<int>> SaveAsync();
-        Task<Result<int>> SaveAsync(T entity);
-        Task<Result<int>> SaveAsync(T entity, ActionType actionType);
+        Task<Result<int>> SaveAsync(TEntity entity);
+        Task<Result<int>> SaveAsync(TEntity entity, ActionType actionType);
 
-        IQueryable<T> Query();
-        IQueryable<T> Query(Expression<Func<T, bool>> predicate);
-        IQueryable<T> Query(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy);
-        IQueryable<T> Query(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, QueryOptions options);
+        IQueryable<TEntity> Query();
+        IQueryable<TEntity> Query(Expression<Func<TEntity, bool>> predicate);
+        IQueryable<TEntity> Query(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy);
+        IQueryable<TEntity> Query(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, QueryOptions options);
     }
 }

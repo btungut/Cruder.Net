@@ -8,9 +8,5 @@ namespace Cruder.Web.ViewModel
         public PageModel PageModel { get; set; }
 
         public List<T> Data { get; set; }
-
-        public Type EntityType { get { return typeof(T); } }
-
-        public T Entity { get; set; }
     }
 }
