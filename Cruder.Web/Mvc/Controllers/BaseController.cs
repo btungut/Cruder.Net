@@ -8,9 +8,6 @@ namespace Cruder.Web.Mvc.Controllers
     {
         protected override void OnActionExecuting(System.Web.Mvc.ActionExecutingContext filterContext)
         {
-            ViewBag.Controller = filterContext.RouteData.Values["controller"].ToString();
-            ViewBag.Action = filterContext.RouteData.Values["action"].ToString();
-
             base.OnActionExecuting(filterContext);
         }
 
@@ -48,7 +45,7 @@ namespace Cruder.Web.Mvc.Controllers
 
         public void WriteMessage(MessageModel model)
         {
-            TempData["MessageModel"] = model;
+            TempData[Constants.PageMessageKey] = model;
         }
     }
 }

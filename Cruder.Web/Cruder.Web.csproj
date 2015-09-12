@@ -102,12 +102,14 @@
     <Compile Include="Auth\BaseAuthorization.cs" />
     <Compile Include="Auth\DefaultAuthorization.cs" />
     <Compile Include="Auth\RouteBasedAuthorization.cs" />
+    <Compile Include="Core\Constants.cs" />
+    <Compile Include="Core\CruderHtmlExtension.cs" />
     <Compile Include="Core\Definition.cs" />
     <Compile Include="Core\ExceptionHandler.cs" />
     <Compile Include="Core\ConfigManager.cs" />
     <Compile Include="Core\UserSessionManager.cs" />
+    <Compile Include="Core\CruderWebViewPage.cs" />
     <Compile Include="Core\WindsorControllerFactory.cs" />
-    <Compile Include="Helper\CruderHtmlExtension.cs" />
     <Compile Include="Helper\CruderHtmlHelper.cs" />
     <Compile Include="Helper\CruderHtmlHelperOfTModel.cs" />
     <Compile Include="Helper\HtmlExtension.cs" />

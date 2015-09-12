@@ -303,32 +303,39 @@ namespace Cruder.Data
 
         private void BindTrackableProperties(TEntity entity, ActionType type)
         {
-            if (!(Thread.CurrentPrincipal.Identity is Cruder.Core.Security.CruderIdentity))
+            if (entity is IUpdateTrackable || entity is ICreationTrackable)
             {
-                throw new FrameworkException("EntityRepository<>.BindTrackableProperties()", "Identity in CurrentPrincipal must be typeof(CruderIdentity) to use EntityRepository functionalities.");
-            }
+                if (!(Thread.CurrentPrincipal.Identity is Cruder.Core.Security.CruderIdentity))
+                {
+                    throw new FrameworkException(
+                        "EntityRepository<>.BindTrackableProperties()", 
+                        string.Format("Identity in CurrentPrincipal must be typeof(CruderIdentity) to use EntityRepository functionalities cause '{0}' has trackable properties.", EntityType.Name));
+                }
 
-            var identity = (Thread.CurrentPrincipal.Identity as Cruder.Core.Security.CruderIdentity);
+                var identity = (Thread.CurrentPrincipal.Identity as Cruder.Core.Security.CruderIdentity);
 
-            if (!identity.IsAuthenticated || !identity.UserId.HasValue)
-            {
-                throw new FrameworkException("EntityRepository<>.BindTrackableProperties()", "Identity must be authenticated to use EntityRepository functionalities.");
-            }
+                if (!identity.IsAuthenticated || !identity.UserId.HasValue)
+                {
+                    throw new FrameworkException(
+                        "EntityRepository<>.BindTrackableProperties()", 
+                        string.Format("Identity must be authenticated to use EntityRepository functionalities cause '{0}' has trackable properties.", EntityType.Name));
+                }
 
-            if (type == ActionType.Create && entity is ICreationTrackable)
-            {
-                ICreationTrackable creationTrackableEntity = (ICreationTrackable)entity;
+                if (type == ActionType.Create && entity is ICreationTrackable)
+                {
+                    ICreationTrackable creationTrackableEntity = (ICreationTrackable)entity;
 
-                creationTrackableEntity.CreatedOn = DateTime.UtcNow;
-                creationTrackableEntity.CreatedBy = identity.UserId.Value;
-            }
+                    creationTrackableEntity.CreatedOn = DateTime.UtcNow;
+                    creationTrackableEntity.CreatedBy = identity.UserId.Value;
+                }
 
-            if (entity is IUpdateTrackable)
-            {
-                IUpdateTrackable updateTrackableEntity = (IUpdateTrackable)entity;
+                if (entity is IUpdateTrackable)
+                {
+                    IUpdateTrackable updateTrackableEntity = (IUpdateTrackable)entity;
 
-                updateTrackableEntity.UpdatedOn = DateTime.UtcNow;
-                updateTrackableEntity.UpdatedBy = identity.UserId.Value;
+                    updateTrackableEntity.UpdatedOn = DateTime.UtcNow;
+                    updateTrackableEntity.UpdatedBy = identity.UserId.Value;
+                }
             }
         }
 
