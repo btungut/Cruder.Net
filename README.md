@@ -93,6 +93,9 @@ Create a empty Asp.Net MVC project and;
  - Add Demo.Data as reference
  - Install **Cruder.Core** and **Cruder.Web** from NuGet.
 
+####Configure **Web.Config** ;
+![enter image description here](https://lh3.googleusercontent.com/-t5yyHvJ92Ic/Vfch16Jvg6I/AAAAAAAABm4/g3biR0rZWq0/s0/Web.Config.png "Web.Config.png")
+
 ####Configure **Views/Web.config** ; 
 ![enter image description here](https://lh3.googleusercontent.com/-5OufWPbc9Ng/VfWEFRUd_LI/AAAAAAAABl8/hKmoo5g9lss/s0/Demo.UI.Views.Web.Config.png "Demo.UI.Views.Web.Config.png")
 
