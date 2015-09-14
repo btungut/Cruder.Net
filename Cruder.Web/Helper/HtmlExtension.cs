@@ -5,11 +5,6 @@ namespace Cruder.Helper
 {
     public static class HtmlExtension
     {
-        public static CruderHtmlHelper<TModel> Cruder<TModel>(this HtmlHelper<TModel> html)
-        {
-            return new CruderHtmlHelper<TModel>(html);
-        }
-
         public static MvcHtmlString Validate(this MvcHtmlString html)
         {
             return AppendHtmlTag(html, "class", "validate[required]");

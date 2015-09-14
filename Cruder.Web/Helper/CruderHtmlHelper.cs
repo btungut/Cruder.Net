@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Cruder.Web;
+using Cruder.Web.ViewModel;
 
 namespace Cruder.Helper
 {
@@ -26,7 +27,7 @@ namespace Cruder.Helper
         {
             bool retVal = false;
 
-            if (memberInfo.GetCustomAttributes(true).Any(q=>q is RequiredAttribute))
+            if (memberInfo.GetCustomAttributes(true).Any(q => q is RequiredAttribute))
             {
                 retVal = true;
             }
@@ -203,6 +204,23 @@ namespace Cruder.Helper
         public List<SelectListItem> CriteriaOptionsForBoolean(string equalsText = "Equals", string notEqualsText = "Not Equals")
         {
             return this.CriteriaOptions(equalsText: equalsText, notEqualsText: notEqualsText, greaterText: null, smallerText: null, containsText: null, notContainsText: null);
+        }
+
+        public MessageModel PageMessage
+        {
+            get
+            {
+                MessageModel retVal = null;
+
+                var data = HtmlHelper.ViewContext.TempData[Constants.PageMessageKey];
+
+                if (data != null)
+                {
+                    retVal = (MessageModel)data;
+                }
+
+                return retVal;
+            }
         }
     }
 }
