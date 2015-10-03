@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 namespace Cruder.Core.Repository
 {
     public abstract class BaseRepository<TEntity, TKey> 
-        where TEntity : Contract.IEntity<TKey>
+        where TEntity : class, Contract.IEntity<TKey>
     {
         public abstract IQueryable<TEntity> Queryable { get; }
 
